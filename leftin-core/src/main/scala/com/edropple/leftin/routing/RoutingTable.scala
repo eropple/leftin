@@ -11,10 +11,10 @@ import javax.inject.Inject
  * @author  eropple
  * @since   17 Sep 2013
  */
-class RoutingTable @Inject() (val module: RoutingModule) extends Logging {
-    lazy val entries: Seq[RoutingEntry] = module.getRoutingEntries.asScala.toSeq
+class RoutingTable @Inject() (module: RoutingModule) extends Logging {
+    val entries: Seq[RoutingEntry] = module.getRoutingEntries.asScala.toSeq
 
-    lazy val methodEntries: Map[HttpMethod, Seq[RoutingEntry]] = Map(
+    val methodEntries: Map[HttpMethod, Seq[RoutingEntry]] = Map(
         (HttpMethod.GET,        entries.filter(p => p.method == HttpMethod.GET)),
         (HttpMethod.POST,       entries.filter(p => p.method == HttpMethod.POST)),
         (HttpMethod.PUT,        entries.filter(p => p.method == HttpMethod.PUT)),

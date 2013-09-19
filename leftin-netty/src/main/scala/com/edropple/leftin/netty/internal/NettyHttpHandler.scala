@@ -9,14 +9,26 @@ import com.edropple.leftin.routing.RoutingTable
 import io.netty.channel.ChannelHandler.Sharable
 import io.netty.buffer.Unpooled
 import com.google.common.base.Charsets
+import com.twitter.util.LruMap
+import java.lang.reflect.Method
+import com.typesafe.config.Config
+import com.edropple.leftin.config.ConfigKeys
+import com.edropple.leftin.netty.NettyHttpConfiguration
 
 @Singleton
 @Sharable
-class NettyHttpHandler @Inject() (val injector: Injector)
+class NettyHttpHandler @Inject() (private val injector: Injector)
         extends SimpleChannelInboundHandler[FullHttpRequest]
         with Logging {
 
-    val routing = injector.getInstance(classOf[RoutingTable]);
+    @Inject private val httpConfig: NettyHttpConfiguration = null;
+    @Inject private val routing: RoutingTable = null;
+
+    private val pathCache = {
+        val size = httpConfig.pathCacheSize;
+        logger.info("Creating path cache with a size of {}.", Integer.valueOf(size));
+        LruMap.makeUnderlying[String, (Class[_], Method)](size);
+    }
 
     def channelRead0(ctx: ChannelHandlerContext, req: FullHttpRequest) {
         throw new Exception();

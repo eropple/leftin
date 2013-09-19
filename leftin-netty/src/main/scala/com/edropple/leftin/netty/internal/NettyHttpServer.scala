@@ -11,9 +11,13 @@ import com.google.inject.Injector
 import io.netty.handler.stream.ChunkedWriteHandler
 import com.typesafe.config.Config
 import javax.inject.{Inject, Singleton}
+import com.edropple.leftin.config.ConfigKeys
+import com.edropple.leftin.netty.NettyHttpConfiguration
 
 @Singleton
-class NettyHttpServer @Inject() (val injector: Injector, val config: Config) extends Logging {
+class NettyHttpServer @Inject() (private val injector: Injector, private val httpConfig: NettyHttpConfiguration)
+        extends Logging {
+
     def start() {
         logger.info("Starting Netty server...");
 
@@ -32,7 +36,7 @@ class NettyHttpServer @Inject() (val injector: Injector, val config: Config) ext
                     val pipeline = channel.pipeline();
 
                     pipeline.addLast("decoder", new HttpRequestDecoder());
-                    pipeline.addLast("aggregator", new HttpObjectAggregator(65536));
+                    pipeline.addLast("aggregator", new HttpObjectAggregator(64 * 1024 * 1024));
                     pipeline.addLast("encoder", new HttpResponseEncoder());
                     pipeline.addLast("chunkedWriter", new ChunkedWriteHandler());
 
@@ -40,9 +44,8 @@ class NettyHttpServer @Inject() (val injector: Injector, val config: Config) ext
                 }
             });
 
-            val port: Integer = config.getInt("http.port");
-            logger.info("Binding server to port {}.", port);
-            bootstrap.bind(port).sync().channel().closeFuture().sync();
+            logger.info("Binding server to port {}.", Integer.valueOf(httpConfig.port));
+            bootstrap.bind(httpConfig.port).sync().channel().closeFuture().sync();
 
         } catch {
             case ex: Exception => {

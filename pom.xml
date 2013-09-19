@@ -20,6 +20,16 @@
             <name>Scala-tools Maven2 Repository</name>
             <url>http://scala-tools.org/repo-releases</url>
         </repository>
+        <repository>
+            <id>typesafe.com</id>
+            <name>Typesafe Releases</name>
+            <url>http://repo.typesafe.com/typesafe/releases/</url>
+        </repository>
+        <repository>
+            <id>maven.twttr.com</id>
+            <name>Twitter Maven</name>
+            <url>http://maven.twttr.com/</url>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>

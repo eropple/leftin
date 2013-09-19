@@ -10,8 +10,8 @@ case class RoutingEntry(val method: HttpMethod, val regex: Pattern,
 object RoutingEntry extends Logging {
     def $(method: HttpMethod, regex: String, controllerClass: Class[_],
           controllerMethod: Symbol): RoutingEntry = {
-        logger.info("resolving: %s \"%s\" - %s.%s", method.toString, regex,
-                    controllerClass.getSimpleName, controllerMethod);
+        logger.info("resolving: {} \"{}\" - {}.{}", method.toString, regex,
+                    controllerClass.getSimpleName, controllerMethod.name);
 
         try {
             val pattern: Pattern = Pattern.compile(regex);
@@ -20,11 +20,11 @@ object RoutingEntry extends Logging {
             return RoutingEntry(method, pattern, controllerClass, realMethod);
         } catch {
             case ex: PatternSyntaxException => {
-                logger.error("INVALID REGEX: %s", regex);
+                logger.error("INVALID REGEX: {}", regex);
                 throw new RoutingException(ex);
             }
             case ex: NoSuchMethodException => {
-                logger.error("NO METHOD FOUND: %s.%s", controllerClass.getSimpleName, controllerMethod.name);
+                logger.error("NO METHOD FOUND: {}.{}", controllerClass.getSimpleName, controllerMethod.name);
                 throw new RoutingException(ex);
             }
         }
