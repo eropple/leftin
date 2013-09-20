@@ -10,7 +10,7 @@ import com.typesafe.config.Config
  * @author  eropple
  * @since   17 Sep 2013
  */
-abstract class LeftinApplication(private val injectionModule: AbstractModule) extends Logging {
+abstract class LeftinApplication(injectionModule: AbstractModule) extends Logging {
 
     val injector: Injector = Guice.createInjector(injectionModule);
 

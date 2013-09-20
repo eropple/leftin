@@ -17,12 +17,9 @@ import com.edropple.leftin.netty.NettyHttpConfiguration
 
 @Singleton
 @Sharable
-class NettyHttpHandler @Inject() (private val injector: Injector)
+class NettyHttpHandler @Inject() (private val httpConfig: NettyHttpConfiguration, private val routing: RoutingTable)
         extends SimpleChannelInboundHandler[FullHttpRequest]
         with Logging {
-
-    @Inject private val httpConfig: NettyHttpConfiguration = null;
-    @Inject private val routing: RoutingTable = null;
 
     private val pathCache = {
         val size = httpConfig.pathCacheSize;
