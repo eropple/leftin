@@ -3,18 +3,20 @@ package com.edropple.leftin.inject
 import com.google.inject.AbstractModule
 import com.typesafe.config.{ConfigFactory, Config}
 import com.edropple.leftin.routing.{RoutingModule}
-import javax.inject.Named
+import javax.inject.Singleton
 import com.edropple.leftin.db.Database
 import com.typesafe.scalalogging.slf4j.Logging
 
 import scala.collection.JavaConverters._
 import com.google.inject.name.Names
+import com.google.common.eventbus.EventBus
 
 abstract class LeftinModule extends AbstractModule with Logging {
     protected def defaultConfiguration() {
         val cfg = config();
         bind(classOf[Config]).toInstance(cfg);
         bind(classOf[RoutingModule]).toInstance(routing());
+        bind(classOf[EventBus]).toInstance(new EventBus());
 
 
         if (cfg.hasPath("db")) {
